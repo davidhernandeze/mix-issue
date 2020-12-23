@@ -1,13 +1,22 @@
 <template>
     <div>
-        holka
+        <Dialog header="Header" v-model:visible="visible" >
+            Content
+        </Dialog>
     </div>
 </template>
 
 <script>
+    import { ref } from 'vue'
     export default {
         mounted() {
             console.log('Component mounted.')
+        },
+        setup() {
+            const visible = ref(true)
+            return {
+                visible
+            }
         }
     }
 </script>
