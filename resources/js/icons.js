@@ -1,6 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
     faTimes,
+    faBong,
     faBars,
     faCapsules,
     faFlask,
