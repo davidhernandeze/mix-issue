@@ -1,8 +1,6 @@
 <template>
     <div>
-        <Dialog header="Header" v-model:visible="visible" >
-            Content
-        </Dialog>
+        <router-view />
     </div>
 </template>
 
