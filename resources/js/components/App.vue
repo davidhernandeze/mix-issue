@@ -3,7 +3,7 @@
         <sidebar :active.sync="isSidebarExpanded"/>
         <div class="flex-1 bg-gray-200">
             <topbar @expand:sidebar="isSidebarExpanded = !isSidebarExpanded"/>
-            <div class="p-10 py-4 text-gray-800 min-h-screen">
+            <div class="p-10 py-4 text-gray-800 min-h-screen container">
                 <router-view/>
             </div>
         </div>

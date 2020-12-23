@@ -1,7 +1,7 @@
 <template>
-    <div class="flex justify-between px-4 py-3 h-12 border-b border-gray-400">
+    <div class="flex justify-between items-center px-4 py-3 h-12 border-b border-gray-400">
         <div class="text-gray-800">
-            <div class="h-8 w-8 rounded-circle bg-white"/>
+            <icon class="cursor-pointer" icon="bars" @click="$emit('expand:sidebar')"/>
         </div>
         <div class="relative">
             <button @click="isOpen = !isOpen"
@@ -37,9 +37,6 @@ export default {
             }
         }
         document.addEventListener('keydown', handleEscape)
-        // this.$once('hook:beforeDestroy', () => {
-        //     document.removeEventListener('keydown', handleEscape)
-        // })
     },
     methods: {
         logout() {

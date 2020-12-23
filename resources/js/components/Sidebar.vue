@@ -1,27 +1,40 @@
 <template>
     <div>
-        <div class="hidden sm:block" style="width: 4rem"></div>
+        <div class="hidden sm:block w-16"></div>
         <div class="fixed z-20" :class="!isExpanded ? ['hidden', 'sm:block'] : ''">
             <div class="bg-gray-800 h-screen text-white overflow-x-hidden"
-                 :class="[isExpanded ? 'w-64' : 'w-16', transitionRunning]"
+                 :class="[isExpanded ? 'w-64' : 'w-16']"
                  @mouseenter="onEnter"
                  @mouseleave="onLeave">
-                <div class="p-4 py-1 flex items-center bg-indigo-600 h-12 cursor-pointer">
-                    <div class="h-8 w-8 rounded-circle bg-white"/>
-                    <span class="ml-4 uppercase font-bold relative whitespace-no-wrap"
-                          @click="$router.push({ name: 'dashboard' })">Dental soft</span>
-                    <icon class="ml-auto text-gray-500 hover:text-white" icon="times" @click="close"/>
+                <div class="py-1 flex items-center bg-indigo-600 h-12 cursor-pointer w-64">
+                    <div class="mx-auto w-16 flex justify-center">
+                        <div class="h-8 w-8 rounded-circle bg-white"/>
+                    </div>
+                    <span class="flex-grow uppercase font-bold whitespace-no-wrap"
+                          @click="$router.push({ name: 'dashboard' })">Licit Action</span>
+                    <icon class="ml-auto text-gray-500 hover:text-white mr-4" icon="times" @click="close"/>
                 </div>
-                <div class="bg-cover bg-center h-12 opacity-25" :style="{'background-image':'url(img/smile.jpg)'}"></div>
-                <div class="pt-3 px-4 -mt-12 flex items-center relative z-1 opacity-100">
-                    <div class="h-8 w-8 rounded-circle bg-white"/>
-                    <span class="ml-4 text-lg text-bold relative whitespace-no-wrap truncate">Dr hetero</span>
-                </div>
-                <ul class="mt-2 text-gray-500 text-black">
-                    <li class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center"
+                <ul class="mt-2 text-gray-500 text-black text-lg">
+                    <li class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center w-64"
                         @click="$router.push({ name: 'appointments' })">
-<!--                        <icon class="mx-5" icon="calendar-alt"/>-->
-                        <span class="relative ml-4 whitespace-no-wrap">Citas</span>
+                        <div class="w-16 flex justify-center">
+                            <icon icon="capsules" size="md"/>
+                        </div>
+                        <span class="flex-grow whitespace-no-wrap">Medicamentos</span>
+                    </li>
+                    <li class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center w-64"
+                        @click="$router.push({ name: 'appointments' })">
+                        <div class="w-16 flex justify-center">
+                            <icon icon="flask" size="md"/>
+                        </div>
+                        <span class="flex-grow whitespace-no-wrap">Laboratorios</span>
+                    </li>
+                    <li class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center w-64"
+                        @click="$router.push({ name: 'appointments' })">
+                        <div class="w-16 flex justify-center">
+                            <icon icon="copyright" size="md"/>
+                        </div>
+                        <span class="flex-grow whitespace-no-wrap">Marcas</span>
                     </li>
                 </ul>
             </div>
@@ -41,18 +54,18 @@ export default {
     methods: {
         onEnter () {
             if (this.disableMouseEvents) return
-            this.disableMouseEventsMeanwhile(200)
+            this.disableMouseEventsMeanwhile(100)
             this.isExpanded = true
             this.transitionRunning = 'expand'
         },
         onLeave () {
             if (this.disableMouseEvents) return
-            this.disableMouseEventsMeanwhile(200)
+            this.disableMouseEventsMeanwhile(100)
             this.isExpanded = false
             this.transitionRunning = 'contract'
         },
         close () {
-            this.disableMouseEventsMeanwhile(200)
+            this.disableMouseEventsMeanwhile(100)
             this.isExpanded = false
             this.$emit('update:active')
             this.transitionRunning = 'contract'
