@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-between items-center px-4 py-3 h-12 border-b border-gray-400">
         <div class="text-gray-800">
-            <icon class="cursor-pointer" icon="bars" @click="$emit('expand:sidebar')"/>
+            <Icon class="cursor-pointer" icon="bars" @click="$emit('expand:sidebar')"/>
         </div>
         <div class="relative">
             <button @click="isOpen = !isOpen"

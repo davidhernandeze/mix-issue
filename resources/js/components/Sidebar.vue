@@ -12,30 +12,19 @@
                     </div>
                     <span class="flex-grow uppercase font-bold whitespace-no-wrap"
                           @click="$router.push({ name: 'dashboard' })">Licit Action</span>
-                    <icon class="ml-auto text-gray-500 hover:text-white mr-4" icon="times" @click="close"/>
+                    <Icon class="ml-auto text-gray-500 hover:text-white mr-4" icon="times" @click="close"/>
                 </div>
                 <ul class="mt-2 text-gray-500 text-black text-lg">
-                    <li class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center w-64"
-                        @click="$router.push({ name: 'appointments' })">
+                    <router-link
+                        to="/laboratorios"
+                        tag="li"
+                        class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center w-64"
+                    >
                         <div class="w-16 flex justify-center">
-                            <icon icon="capsules" size="md"/>
-                        </div>
-                        <span class="flex-grow whitespace-no-wrap">Medicamentos</span>
-                    </li>
-                    <li class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center w-64"
-                        @click="$router.push({ name: 'appointments' })">
-                        <div class="w-16 flex justify-center">
-                            <icon icon="flask" size="md"/>
+                            <Icon icon="flask" size="lg"/>
                         </div>
                         <span class="flex-grow whitespace-no-wrap">Laboratorios</span>
-                    </li>
-                    <li class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center w-64"
-                        @click="$router.push({ name: 'appointments' })">
-                        <div class="w-16 flex justify-center">
-                            <icon icon="copyright" size="md"/>
-                        </div>
-                        <span class="flex-grow whitespace-no-wrap">Marcas</span>
-                    </li>
+                    </router-link>
                 </ul>
             </div>
         </div>

@@ -1,4 +1,5 @@
-import Dashboard from "./components/Dashboard"
+import Dashboard from "./views/Dashboard"
+import Laboratorios from "./views/Laboratorios"
 import {createRouter, createWebHistory} from "vue-router"
 
 const routes = [
@@ -6,6 +7,11 @@ const routes = [
         path: "/",
         name: "dashboard",
         component: Dashboard,
+    },
+    {
+        path: "/laboratorios",
+        name: "laboratorios.index",
+        component: Laboratorios,
     }
 ]
 
