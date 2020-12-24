@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card p-4">
         <Toolbar class="p-mb-4">
             <template #left>
                 <Button label="New" icon="pi pi-plus" class="p-button-success p-mr-2" @click="openNew" />
@@ -13,8 +13,8 @@
                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[5,10,25]"
                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
             <template #header>
-                <div class="table-header">
-                    <span class="p-m-0">Administrar laboratorios</span>
+                <div class="table-header flex justify-between items-center">
+                    <span class="text-lg">Administrar laboratorios</span>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search" />
                         <InputText v-model="filters['global']" placeholder="Search..." />
