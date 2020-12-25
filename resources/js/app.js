@@ -9,12 +9,14 @@ import './icons'
 import registerPrimeComponents from './prime-imports'
 
 import App from './components/App.vue'
+import Spinner from './components/Spinner.vue'
 
 const app = createApp(App)
 
 app.use(router)
 
 app.component('Icon', FontAwesomeIcon)
+app.component('Spinner', Spinner)
 
 app.use(PrimeVue.install)
 registerPrimeComponents(app)
