@@ -10,6 +10,8 @@ import Rating from 'primevue/rating'
 import Textarea from 'primevue/textarea'
 import RadioButton from 'primevue/radiobutton'
 import InputNumber from 'primevue/inputnumber'
+import ProgressSpinner from 'primevue/progressspinner'
+import BlockUI from 'primevue/blockui'
 
 export default function(app) {
     app.component('Dialog', Dialog)
@@ -24,4 +26,6 @@ export default function(app) {
     app.component('Textarea', Textarea)
     app.component('RadioButton', RadioButton)
     app.component('InputNumber', InputNumber)
+    app.component('ProgressSpinner', ProgressSpinner)
+    app.component('BlockUI', BlockUI)
 }

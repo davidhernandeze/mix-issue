@@ -1,9 +1,11 @@
 <template>
+    <Spinner :active="loading"/>
     <div class="card p-4">
+        <h1 class="uppercase my-4 text-2xl">Administrar laboratorios</h1>
         <Toolbar class="p-mb-4">
             <template #left>
                 <Button
-                    label="New"
+                    label="Nuevo"
                     icon="pi pi-plus"
                     class="p-button-success p-mr-2"
                     @click="openNew"
@@ -27,8 +29,7 @@
             currentPageReportTemplate="Mostrando {currentPage} de {totalPages} páginas ({totalRecords} registros en total)"
         >
             <template #header>
-                <div class="table-header flex justify-between items-center">
-                    <span class="text-lg">Administrar laboratorios</span>
+                <div class="table-header flex justify-end items-center">
                     <span class="p-input-icon-left">
                         <i class="pi pi-search" />
                         <InputText v-model="search" placeholder="Buscar..." />
@@ -55,7 +56,7 @@
         </DataTable>
     </div>
 
-    <Dialog v-model:visible="productDialog" :style="{width: '450px'}" header="Product Details" :modal="true" class="p-fluid">
+    <Dialog v-model:visible="editDialog" :style="{width: '450px'}" header="Detalles" :modal="true" class="p-fluid">
         <img :src="'demo/images/product/' + product.image" :alt="product.image" class="product-image" v-if="product.image" />
         <div class="p-field">
             <label for="name">Name</label>
@@ -105,27 +106,17 @@
         </template>
     </Dialog>
 
-    <Dialog v-model:visible="deleteProductDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
-        <div class="confirmation-content">
+    <Dialog v-model:visible="deleteDialog" :style="{width: '450px'}" header="Confirmación" :modal="true">
+        <div class="flex items-center">
             <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
-            <span v-if="product">Are you sure you want to delete <b>{{product.name}}</b>?</span>
+            <span v-if="laboratory">¿Eliminar <b>{{laboratory.name}}</b>?</span>
         </div>
         <template #footer>
-            <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductDialog = false"/>
-            <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteProduct" />
+            <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteDialog = false"/>
+            <Button label="Si" icon="pi pi-check" class="p-button-text" @click="delete" />
         </template>
     </Dialog>
 
-    <Dialog v-model:visible="deleteProductsDialog" :style="{width: '450px'}" header="Confirm" :modal="true">
-        <div class="confirmation-content">
-            <i class="pi pi-exclamation-triangle p-mr-3" style="font-size: 2rem" />
-            <span v-if="product">Are you sure you want to delete the selected products?</span>
-        </div>
-        <template #footer>
-            <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductsDialog = false"/>
-            <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteSelectedProducts"/>
-        </template>
-    </Dialog>
 </template>
 
 <script>
@@ -142,11 +133,11 @@ export default {
             sortBy: 'id',
             sortOrder: 'desc',
             search: '',
-            productDialog: false,
-            deleteProductDialog: false,
-            deleteProductsDialog: false,
+            editDialog: false,
+            deleteDialog: false,
             laboratory: {},
-            submitted: false
+            submitted: false,
+            loading: false
         }
     },
     mounted() {
@@ -155,7 +146,6 @@ export default {
     methods: {
         async fetch() {
             this.tableLoading = true
-            this.loading = true
             const query = {
                 sort_by: this.sortBy,
                 sort_order: this.sortOrder,
@@ -193,15 +183,18 @@ export default {
             this.product = {...product}
             this.productDialog = true
         },
-        confirmDeleteProduct(product) {
-            this.product = product
-            this.deleteProductDialog = true
+        confirmDeleteProduct(laboratory) {
+            this.laboratory = laboratory
+            this.deleteDialog = true
         },
-        deleteProduct() {
-            this.products = this.products.filter(val => val.id !== this.product.id)
-            this.deleteProductDialog = false
-            this.product = {}
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000})
+        async delete() {
+            this.loading = true
+            await axios.delete(route('laboratories.destroy', this.laboratory.id))
+            this.loading = false
+            this.deleteDialog = false
+            this.laboratory = {}
+            this.$toast.add({severity:'success', summary: 'Operación exitosa', detail: 'Laboratorio eliminado', life: 3000})
+            await this.fetch()
         }
     },
     watch: {

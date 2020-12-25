@@ -10,6 +10,7 @@ import registerPrimeComponents from './prime-imports'
 
 import App from './components/App.vue'
 import Spinner from './components/Spinner.vue'
+import ToastService from 'primevue/toastservice';
 
 const app = createApp(App)
 
@@ -19,6 +20,7 @@ app.component('Icon', FontAwesomeIcon)
 app.component('Spinner', Spinner)
 
 app.use(PrimeVue.install)
+app.use(ToastService);
 registerPrimeComponents(app)
 
 app.mount("#app")

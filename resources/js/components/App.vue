@@ -8,14 +8,16 @@
             </div>
         </div>
     </div>
+    <Toast/>
 </template>
 
 <script>
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
+import Toast from 'primevue/toast';
 
 export default {
-    components: {Sidebar, Topbar },
+    components: { Sidebar, Topbar, Toast },
     data() {
         return {
             isSidebarExpanded: false

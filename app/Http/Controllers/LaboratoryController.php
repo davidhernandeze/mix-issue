@@ -14,4 +14,10 @@ class LaboratoryController extends Controller
             ->orderBy(request('sort_by'), request('sort_order'))
             ->paginate(10);
     }
+
+    public function destroy(Laboratory $laboratory)
+    {
+        $laboratory->delete();
+        return response()->json(['status' => 'ok' ]);
+    }
 }
