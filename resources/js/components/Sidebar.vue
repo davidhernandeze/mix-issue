@@ -21,7 +21,7 @@
                         class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center w-64"
                     >
                         <div class="w-16 flex justify-center">
-                            <Icon icon="flask" size="lg"/>
+                            <Icon icon="flask"/>
                         </div>
                         <span class="flex-grow whitespace-no-wrap">Laboratorios</span>
                     </router-link>

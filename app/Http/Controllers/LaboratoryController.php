@@ -9,6 +9,10 @@ class LaboratoryController extends Controller
 {
     public function index()
     {
-        return Laboratory::query()->paginate(10);
+        return Laboratory::query()
+            ->where('name', 'like', '%'. request('search') .'%')
+            ->where('description', 'like', '%'. request('search').'%')
+            ->orderBy(request('sort_by'), request('sort_order'))
+            ->paginate(10);
     }
 }

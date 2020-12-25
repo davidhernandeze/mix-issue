@@ -19,6 +19,10 @@
         </Toolbar>
 
         <DataTable ref="dt"
+                   :lazy="true"
+                   @page="onPageChange($event)"
+                   :loading="tableLoading"
+                   :totalRecords="totalRecords"
                    :value="laboratories"
                    v-model:selection="selectedProducts"
                    dataKey="id"
@@ -27,20 +31,20 @@
                    :rows="10"
                    :filters="filters"
                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
-                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
+                   currentPageReportTemplate="Mostrando {first} de {totalRecords} laboratorios">
             <template #header>
                 <div class="table-header flex justify-between items-center">
                     <span class="text-lg">Administrar laboratorios</span>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search" />
-                        <InputText v-model="filters['global']" placeholder="Search..." />
+                        <InputText v-model="search" placeholder="Buscar..." />
                     </span>
                 </div>
             </template>
 
             <Column selectionMode="multiple" headerStyle="width: 3rem" :exportable="false"></Column>
             <Column field="name" header="Nombre" :sortable="true"/>
-            <Column field="description" header="Description" :sortable="true"/>
+            <Column field="description" header="Description"/>
             <Column>
                 <template #body="slotProps">
                     <Button
@@ -138,6 +142,11 @@ export default {
     data() {
         return {
             laboratories: [],
+            totalRecords: 0,
+            tableLoading: false,
+            currentPage: 0,
+            sortBy: 'id',
+            sortOrder: 'desc',
             products: null,
             productDialog: false,
             deleteProductDialog: false,
@@ -149,13 +158,26 @@ export default {
         }
     },
     mounted() {
-        console.log('lab')
         this.fetch()
     },
     methods: {
         async fetch() {
-            const { data } = await axios.get(route('laboratories.index'))
+            this.tableLoading = true
+            this.loading = true
+            const query = {
+                sort_by: this.sortBy,
+                sort_order: this.sortOrder,
+                page: this.currentPage,
+                // search: this.search
+            }
+            const { data } = await axios.get(route('laboratories.index', query))
+            this.tableLoading = false
             this.laboratories = data.data
+            this.totalRecords = data.total
+        },
+        onPageChange(event) {
+            this.currentPage = event.page + 1
+            this.fetch()
         },
         formatCurrency(value) {
             return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'})
