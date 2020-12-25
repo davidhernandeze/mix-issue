@@ -137,6 +137,7 @@
 
 <script>
 import axios from 'axios'
+import { debounce } from 'lodash'
 
 export default {
     data() {
@@ -144,9 +145,10 @@ export default {
             laboratories: [],
             totalRecords: 0,
             tableLoading: false,
-            currentPage: 0,
+            currentPage: 1,
             sortBy: 'id',
             sortOrder: 'desc',
+            search: '',
             products: null,
             productDialog: false,
             deleteProductDialog: false,
@@ -168,7 +170,7 @@ export default {
                 sort_by: this.sortBy,
                 sort_order: this.sortOrder,
                 page: this.currentPage,
-                // search: this.search
+                search: this.search
             }
             const { data } = await axios.get(route('laboratories.index', query))
             this.tableLoading = false
@@ -178,9 +180,6 @@ export default {
         onPageChange(event) {
             this.currentPage = event.page + 1
             this.fetch()
-        },
-        formatCurrency(value) {
-            return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'})
         },
         openNew() {
             this.product = {}
@@ -192,23 +191,7 @@ export default {
             this.submitted = false
         },
         saveProduct() {
-            this.submitted = true
 
-            if (this.product.name.trim()) {
-                if (this.product.id) {
-                    this.products[this.findIndexById(this.product.id)] = this.product
-                    this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000})
-                }
-                else {
-                    this.product.id = this.createId()
-                    this.product.image = 'product-placeholder.svg'
-                    this.products.push(this.product)
-                    this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000})
-                }
-
-                this.productDialog = false
-                this.product = {}
-            }
         },
         editProduct(product) {
             this.product = {...product}
@@ -224,28 +207,6 @@ export default {
             this.product = {}
             this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000})
         },
-        findIndexById(id) {
-            let index = -1
-            for (let i = 0; i < this.products.length; i++) {
-                if (this.products[i].id === id) {
-                    index = i
-                    break
-                }
-            }
-
-            return index
-        },
-        createId() {
-            let id = ''
-            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-            for ( var i = 0; i < 5; i++ ) {
-                id += chars.charAt(Math.floor(Math.random() * chars.length))
-            }
-            return id
-        },
-        exportCSV() {
-            this.$refs.dt.exportCSV()
-        },
         confirmDeleteSelected() {
             this.deleteProductsDialog = true
         },
@@ -255,6 +216,12 @@ export default {
             this.selectedProducts = null
             this.$toast.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000})
         }
+    },
+    watch: {
+        search: debounce(function () {
+            this.page = 1
+            this.fetch()
+        }, 500)
     }
 }
 </script>
