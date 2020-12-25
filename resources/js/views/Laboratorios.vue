@@ -8,19 +8,13 @@
                     class="p-button-success p-mr-2"
                     @click="openNew"
                 />
-                <Button
-                    label="Delete"
-                    icon="pi pi-trash"
-                    class="p-button-danger"
-                    @click="confirmDeleteSelected"
-                    :disabled="!selectedProducts || !selectedProducts.length"
-                />
             </template>
         </Toolbar>
 
         <DataTable ref="dt"
                    :lazy="true"
                    @page="onPageChange($event)"
+                   @sort="onSortChange($event)"
                    :loading="tableLoading"
                    :totalRecords="totalRecords"
                    :value="laboratories"
@@ -29,7 +23,6 @@
                    class="p-datatable-responsive-demo"
                    :paginator="true"
                    :rows="10"
-                   :filters="filters"
                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
                    currentPageReportTemplate="Mostrando {first} de {totalRecords} laboratorios">
             <template #header>
@@ -42,7 +35,6 @@
                 </div>
             </template>
 
-            <Column selectionMode="multiple" headerStyle="width: 3rem" :exportable="false"></Column>
             <Column field="name" header="Nombre" :sortable="true"/>
             <Column field="description" header="Description"/>
             <Column>
@@ -149,13 +141,11 @@ export default {
             sortBy: 'id',
             sortOrder: 'desc',
             search: '',
-            products: null,
             productDialog: false,
             deleteProductDialog: false,
             deleteProductsDialog: false,
-            product: {},
+            laboratory: {},
             selectedProducts: null,
-            filters: {},
             submitted: false
         }
     },
@@ -179,6 +169,12 @@ export default {
         },
         onPageChange(event) {
             this.currentPage = event.page + 1
+            this.fetch()
+        },
+        onSortChange(event) {
+            this.sortBy = event.sortField
+            this.sortOrder = event.sortOrder > 0 ? 'asc' : 'desc'
+            this.currentPage = 1
             this.fetch()
         },
         openNew() {
@@ -206,15 +202,6 @@ export default {
             this.deleteProductDialog = false
             this.product = {}
             this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000})
-        },
-        confirmDeleteSelected() {
-            this.deleteProductsDialog = true
-        },
-        deleteSelectedProducts() {
-            this.products = this.products.filter(val => !this.selectedProducts.includes(val))
-            this.deleteProductsDialog = false
-            this.selectedProducts = null
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000})
         }
     },
     watch: {
