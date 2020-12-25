@@ -2,15 +2,31 @@
     <div class="card p-4">
         <Toolbar class="p-mb-4">
             <template #left>
-                <Button label="New" icon="pi pi-plus" class="p-button-success p-mr-2" @click="openNew" />
-                <Button label="Delete" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+                <Button
+                    label="New"
+                    icon="pi pi-plus"
+                    class="p-button-success p-mr-2"
+                    @click="openNew"
+                />
+                <Button
+                    label="Delete"
+                    icon="pi pi-trash"
+                    class="p-button-danger"
+                    @click="confirmDeleteSelected"
+                    :disabled="!selectedProducts || !selectedProducts.length"
+                />
             </template>
         </Toolbar>
 
-        <DataTable ref="dt" :value="products" v-model:selection="selectedProducts" dataKey="id"
+        <DataTable ref="dt"
+                   :value="laboratories"
+                   v-model:selection="selectedProducts"
+                   dataKey="id"
                    class="p-datatable-responsive-demo"
-                   :paginator="true" :rows="10" :filters="filters"
-                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[5,10,25]"
+                   :paginator="true"
+                   :rows="10"
+                   :filters="filters"
+                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
             <template #header>
                 <div class="table-header flex justify-between items-center">
@@ -23,33 +39,20 @@
             </template>
 
             <Column selectionMode="multiple" headerStyle="width: 3rem" :exportable="false"></Column>
-            <Column field="code" header="Code" :sortable="true"></Column>
-            <Column field="name" header="Name" :sortable="true"></Column>
-            <Column header="Image">
+            <Column field="name" header="Nombre" :sortable="true"/>
+            <Column field="description" header="Description" :sortable="true"/>
+            <Column>
                 <template #body="slotProps">
-                    <img :src="'demo/images/product/' + slotProps.data.image" :alt="slotProps.data.image" class="product-image" />
-                </template>
-            </Column>
-            <Column field="price" header="Price" :sortable="true">
-                <template #body="slotProps">
-                    {{formatCurrency(slotProps.data.price)}}
-                </template>
-            </Column>
-            <Column field="category" header="Category" :sortable="true"></Column>
-            <Column field="rating" header="Reviews" :sortable="true">
-                <template #body="slotProps">
-                    <Rating :modelValue="slotProps.data.rating" :readonly="true" :cancel="false" />
-                </template>
-            </Column>
-            <Column field="inventoryStatus" header="Status" :sortable="true">
-                <template #body="slotProps">
-                    <span :class="'product-badge status-' + slotProps.data.inventoryStatus.toLowerCase()">{{slotProps.data.inventoryStatus}}</span>
-                </template>
-            </Column>
-            <Column :exportable="false">
-                <template #body="slotProps">
-                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editProduct(slotProps.data)" />
-                    <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
+                    <Button
+                        icon="pi pi-pencil"
+                        class="p-button-rounded p-button-success p-mr-2"
+                        @click="editProduct(slotProps.data)"
+                    />
+                    <Button
+                        icon="pi pi-trash"
+                        class="p-button-rounded p-button-danger"
+                        @click="confirmDeleteProduct(slotProps.data)"
+                    />
                 </template>
             </Column>
         </DataTable>
@@ -129,11 +132,12 @@
 </template>
 
 <script>
-import ProductService from '../services/ProductService';
+import axios from 'axios'
 
 export default {
     data() {
         return {
+            laboratories: [],
             products: null,
             productDialog: false,
             deleteProductDialog: false,
@@ -144,89 +148,90 @@ export default {
             submitted: false
         }
     },
-    productService: null,
-    created() {
-        this.productService = new ProductService();
-    },
     mounted() {
-        this.productService.getProducts().then(data => this.products = data);
+        console.log('lab')
+        this.fetch()
     },
     methods: {
+        async fetch() {
+            const { data } = await axios.get(route('laboratories.index'))
+            this.laboratories = data.data
+        },
         formatCurrency(value) {
-            return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+            return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'})
         },
         openNew() {
-            this.product = {};
-            this.submitted = false;
-            this.productDialog = true;
+            this.product = {}
+            this.submitted = false
+            this.productDialog = true
         },
         hideDialog() {
-            this.productDialog = false;
-            this.submitted = false;
+            this.productDialog = false
+            this.submitted = false
         },
         saveProduct() {
-            this.submitted = true;
+            this.submitted = true
 
             if (this.product.name.trim()) {
                 if (this.product.id) {
-                    this.products[this.findIndexById(this.product.id)] = this.product;
-                    this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
+                    this.products[this.findIndexById(this.product.id)] = this.product
+                    this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000})
                 }
                 else {
-                    this.product.id = this.createId();
-                    this.product.image = 'product-placeholder.svg';
-                    this.products.push(this.product);
-                    this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
+                    this.product.id = this.createId()
+                    this.product.image = 'product-placeholder.svg'
+                    this.products.push(this.product)
+                    this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000})
                 }
 
-                this.productDialog = false;
-                this.product = {};
+                this.productDialog = false
+                this.product = {}
             }
         },
         editProduct(product) {
-            this.product = {...product};
-            this.productDialog = true;
+            this.product = {...product}
+            this.productDialog = true
         },
         confirmDeleteProduct(product) {
-            this.product = product;
-            this.deleteProductDialog = true;
+            this.product = product
+            this.deleteProductDialog = true
         },
         deleteProduct() {
-            this.products = this.products.filter(val => val.id !== this.product.id);
-            this.deleteProductDialog = false;
-            this.product = {};
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
+            this.products = this.products.filter(val => val.id !== this.product.id)
+            this.deleteProductDialog = false
+            this.product = {}
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000})
         },
         findIndexById(id) {
-            let index = -1;
+            let index = -1
             for (let i = 0; i < this.products.length; i++) {
                 if (this.products[i].id === id) {
-                    index = i;
-                    break;
+                    index = i
+                    break
                 }
             }
 
-            return index;
+            return index
         },
         createId() {
-            let id = '';
-            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let id = ''
+            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
             for ( var i = 0; i < 5; i++ ) {
-                id += chars.charAt(Math.floor(Math.random() * chars.length));
+                id += chars.charAt(Math.floor(Math.random() * chars.length))
             }
-            return id;
+            return id
         },
         exportCSV() {
-            this.$refs.dt.exportCSV();
+            this.$refs.dt.exportCSV()
         },
         confirmDeleteSelected() {
-            this.deleteProductsDialog = true;
+            this.deleteProductsDialog = true
         },
         deleteSelectedProducts() {
-            this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-            this.deleteProductsDialog = false;
-            this.selectedProducts = null;
-            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
+            this.products = this.products.filter(val => !this.selectedProducts.includes(val))
+            this.deleteProductsDialog = false
+            this.selectedProducts = null
+            this.$toast.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000})
         }
     }
 }
