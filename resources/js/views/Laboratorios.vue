@@ -11,20 +11,21 @@
             </template>
         </Toolbar>
 
-        <DataTable ref="dt"
-                   :lazy="true"
-                   @page="onPageChange($event)"
-                   @sort="onSortChange($event)"
-                   :loading="tableLoading"
-                   :totalRecords="totalRecords"
-                   :value="laboratories"
-                   v-model:selection="selectedProducts"
-                   dataKey="id"
-                   class="p-datatable-responsive-demo"
-                   :paginator="true"
-                   :rows="10"
-                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
-                   currentPageReportTemplate="Mostrando {first} de {totalRecords} laboratorios">
+        <DataTable
+            ref="dt"
+            :value="laboratories"
+            :lazy="true"
+            :loading="tableLoading"
+            :paginator="true"
+            @page="onPageChange($event)"
+            :rows="10"
+            :totalRecords="totalRecords"
+            @sort="onSortChange($event)"
+            dataKey="id"
+            class="p-datatable-responsive-demo"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport"
+            currentPageReportTemplate="Mostrando {currentPage} de {totalPages} páginas ({totalRecords} registros en total)"
+        >
             <template #header>
                 <div class="table-header flex justify-between items-center">
                     <span class="text-lg">Administrar laboratorios</span>
@@ -145,7 +146,6 @@ export default {
             deleteProductDialog: false,
             deleteProductsDialog: false,
             laboratory: {},
-            selectedProducts: null,
             submitted: false
         }
     },
