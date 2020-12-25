@@ -1,4 +1,7 @@
-import { createApp } from 'vue'
+window.axios = require('axios');
+
+import { createApp, Vue } from 'vue'
+import axios from 'axios'
 import router from './router'
 import PrimeVue from 'primevue/config'
 
