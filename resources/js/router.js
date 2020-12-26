@@ -1,5 +1,5 @@
 import Dashboard from "./views/Dashboard"
-import Laboratorios from "./views/Laboratorios"
+import Laboratories from "./views/Laboratories"
 import {createRouter, createWebHistory} from "vue-router"
 
 const routes = [
@@ -11,7 +11,7 @@ const routes = [
     {
         path: "/laboratorios",
         name: "laboratorios.index",
-        component: Laboratorios,
+        component: Laboratories,
     }
 ]
 

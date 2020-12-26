@@ -59,7 +59,7 @@
     <Dialog v-model:visible="editDialog" :style="{width: '450px'}" header="Crear o Editar" :modal="true" class="p-fluid">
         <div class="p-field">
             <label for="name">Nombre</label>
-            <InputText id="name" v-model.trim="laboratory.name" autofocus :class="{'p-invalid': submitted && !laboratory.name}" />
+            <InputText id="name" v-model.trim="laboratory.name" autofocus :class="{'p-invalid': errors.name}" />
             <small class="p-invalid" v-if="errors.name">{{ errors.name[0] }}</small>
         </div>
         <div class="p-field">
@@ -88,26 +88,18 @@
 
 <script>
 import axios from 'axios'
-import { debounce } from 'lodash'
+import table from '../mixins/table'
 
 export default {
-    data() {
-        return {
-            laboratories: [],
-            totalRecords: 0,
-            tableLoading: false,
-            currentPage: 1,
-            sortBy: 'id',
-            sortOrder: 'desc',
-            search: '',
-            editDialog: false,
-            errors: {},
-            deleteDialog: false,
-            laboratory: {},
-            submitted: false,
-            loading: false
-        }
-    },
+    mixins: [ table ],
+    data: () => ({
+        laboratories: [],
+        editDialog: false,
+        errors: {},
+        deleteDialog: false,
+        laboratory: {},
+        loading: false
+    }),
     mounted() {
         this.fetch()
     },
@@ -125,24 +117,12 @@ export default {
             this.laboratories = data.data
             this.totalRecords = data.total
         },
-        onPageChange(event) {
-            this.currentPage = event.page + 1
-            this.fetch()
-        },
-        onSortChange(event) {
-            this.sortBy = event.sortField
-            this.sortOrder = event.sortOrder > 0 ? 'asc' : 'desc'
-            this.currentPage = 1
-            this.fetch()
-        },
         openNew() {
             this.laboratory = {}
-            this.submitted = false
             this.editDialog = true
         },
         hideDialog() {
             this.editDialog = false
-            this.submitted = false
         },
         async save() {
             this.loading = true
@@ -182,12 +162,6 @@ export default {
             this.success('Laboratorio eliminado')
             await this.fetch()
         }
-    },
-    watch: {
-        search: debounce(function () {
-            this.page = 1
-            this.fetch()
-        }, 500)
     }
 }
 </script>
