@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LaboratoryRequest;
 use App\Models\Laboratory;
 
 class LaboratoryController extends Controller
@@ -19,5 +20,10 @@ class LaboratoryController extends Controller
     {
         $laboratory->delete();
         return response()->json(['status' => 'ok' ]);
+    }
+
+    public function store(LaboratoryRequest $request)
+    {
+        return Laboratory::query()->updateOrCreate(['id' => $request->id], $request->validated());
     }
 }

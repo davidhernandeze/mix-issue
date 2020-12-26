@@ -44,7 +44,7 @@
                     <Button
                         icon="pi pi-pencil"
                         class="p-button-rounded p-button-success p-mr-2"
-                        @click="editProduct(slotProps.data)"
+                        @click="edit(slotProps.data)"
                     />
                     <Button
                         icon="pi pi-trash"
@@ -56,53 +56,20 @@
         </DataTable>
     </div>
 
-    <Dialog v-model:visible="editDialog" :style="{width: '450px'}" header="Detalles" :modal="true" class="p-fluid">
-        <img :src="'demo/images/product/' + product.image" :alt="product.image" class="product-image" v-if="product.image" />
+    <Dialog v-model:visible="editDialog" :style="{width: '450px'}" header="Crear o Editar" :modal="true" class="p-fluid">
         <div class="p-field">
-            <label for="name">Name</label>
-            <InputText id="name" v-model.trim="product.name" required="true" autofocus :class="{'p-invalid': submitted && !product.name}" />
-            <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
+            <label for="name">Nombre</label>
+            <InputText id="name" v-model.trim="laboratory.name" autofocus :class="{'p-invalid': submitted && !laboratory.name}" />
+            <small class="p-invalid" v-if="errors.name">{{ errors.name[0] }}</small>
         </div>
         <div class="p-field">
-            <label for="description">Description</label>
-            <Textarea id="description" v-model="product.description" required="true" rows="3" cols="20" />
-        </div>
-
-        <div class="p-field">
-            <label class="p-mb-3">Category</label>
-            <div class="p-formgrid p-grid">
-                <div class="p-field-radiobutton p-col-6">
-                    <RadioButton id="category1" name="category" value="Accessories" v-model="product.category" />
-                    <label for="category1">Accessories</label>
-                </div>
-                <div class="p-field-radiobutton p-col-6">
-                    <RadioButton id="category2" name="category" value="Clothing" v-model="product.category" />
-                    <label for="category2">Clothing</label>
-                </div>
-                <div class="p-field-radiobutton p-col-6">
-                    <RadioButton id="category3" name="category" value="Electronics" v-model="product.category" />
-                    <label for="category3">Electronics</label>
-                </div>
-                <div class="p-field-radiobutton p-col-6">
-                    <RadioButton id="category4" name="category" value="Fitness" v-model="product.category" />
-                    <label for="category4">Fitness</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="p-formgrid p-grid">
-            <div class="p-field p-col">
-                <label for="price">Price</label>
-                <InputNumber id="price" v-model="product.price" mode="currency" currency="USD" locale="en-US" />
-            </div>
-            <div class="p-field p-col">
-                <label for="quantity">Quantity</label>
-                <InputNumber id="quantity" v-model="product.quantity" integeronly />
-            </div>
+            <label for="description">Descripción</label>
+            <Textarea id="description" v-model="laboratory.description" rows="3" cols="20" />
+            <small class="p-invalid" v-if="errors.description">{{ errors.name[0] }}</small>
         </div>
         <template #footer>
-            <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog"/>
-            <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveProduct" />
+            <Button label="Cancelar" icon="pi pi-times" class="p-button-text" @click="hideDialog"/>
+            <Button label="Guardar" icon="pi pi-check" class="p-button-text" @click="save" />
         </template>
     </Dialog>
 
@@ -113,7 +80,7 @@
         </div>
         <template #footer>
             <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteDialog = false"/>
-            <Button label="Si" icon="pi pi-check" class="p-button-text" @click="delete" />
+            <Button label="Si" icon="pi pi-check" class="p-button-text" @click="destroy" />
         </template>
     </Dialog>
 
@@ -134,6 +101,7 @@ export default {
             sortOrder: 'desc',
             search: '',
             editDialog: false,
+            errors: {},
             deleteDialog: false,
             laboratory: {},
             submitted: false,
@@ -168,32 +136,50 @@ export default {
             this.fetch()
         },
         openNew() {
-            this.product = {}
+            this.laboratory = {}
             this.submitted = false
-            this.productDialog = true
+            this.editDialog = true
         },
         hideDialog() {
-            this.productDialog = false
+            this.editDialog = false
             this.submitted = false
         },
-        saveProduct() {
-
+        async save() {
+            this.loading = true
+            try {
+                await this.http().post(route('laboratories.store'), this.laboratory)
+                this.success('Laboratorio creado')
+                this.editDialog = false
+                this.laboratory = {}
+                await this.fetch()
+                this.loading = false
+            }
+            catch (e) {
+                this.loading = false
+                if (e.response.status === 422) {
+                    this.danger(this.getFirstValidationError(e.response.data.errors))
+                    this.errors = e.response.data.errors
+                }
+                else {
+                    this.danger(e.message)
+                }
+            }
         },
-        editProduct(product) {
-            this.product = {...product}
-            this.productDialog = true
+        edit(laboratory) {
+            this.laboratory = {...laboratory}
+            this.editDialog = true
         },
         confirmDeleteProduct(laboratory) {
             this.laboratory = laboratory
             this.deleteDialog = true
         },
-        async delete() {
+        async destroy() {
             this.loading = true
-            await axios.delete(route('laboratories.destroy', this.laboratory.id))
+            await this.http().delete(route('laboratories.destroy', this.laboratory.id))
             this.loading = false
             this.deleteDialog = false
             this.laboratory = {}
-            this.$toast.add({severity:'success', summary: 'Operación exitosa', detail: 'Laboratorio eliminado', life: 3000})
+            this.success('Laboratorio eliminado')
             await this.fetch()
         }
     },
