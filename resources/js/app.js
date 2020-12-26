@@ -1,4 +1,7 @@
-window.axios = require('axios');
+window.axios = require('axios')
+let token = document.head.querySelector('meta[name="csrf-token"]')
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content
+window.laravelToken = token.content
 
 import { createApp } from 'vue'
 import router from './router'
@@ -11,6 +14,7 @@ import registerPrimeComponents from './prime-imports'
 import App from './components/App.vue'
 import Spinner from './components/Spinner.vue'
 import ToastService from 'primevue/toastservice';
+import http from './mixins/http'
 
 const app = createApp(App)
 
@@ -24,3 +28,4 @@ app.use(ToastService);
 registerPrimeComponents(app)
 
 app.mount("#app")
+app.mixin(http)
