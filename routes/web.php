@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,8 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-
 Auth::routes();
+
+Route::prefix('api')->middleware('auth')->group(function () {
+    Route::apiResource('laboratories', 'LaboratoryController');
+});
+
+Route::get('/{vue_capture?}', function () {
+    return view('dashboard');
+})
+    ->middleware(['auth'])
+    ->name('dashboard')
+    ->where('vue_capture', '[\/\w\.-]*');

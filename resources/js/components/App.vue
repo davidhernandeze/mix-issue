@@ -1,21 +1,23 @@
 <template>
-    <div class="flex">
+    <div class="flex text-sm">
         <sidebar :active.sync="isSidebarExpanded"/>
         <div class="flex-1 bg-gray-200">
             <topbar @expand:sidebar="isSidebarExpanded = !isSidebarExpanded"/>
-            <div class="p-10 py-4 text-gray-800 min-h-screen container">
+            <div class="p-4 text-gray-800 min-h-screen container">
                 <router-view/>
             </div>
         </div>
     </div>
+    <Toast/>
 </template>
 
 <script>
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
+import Toast from 'primevue/toast';
 
 export default {
-    components: {Sidebar, Topbar },
+    components: { Sidebar, Topbar, Toast },
     data() {
         return {
             isSidebarExpanded: false
