@@ -18,6 +18,7 @@ Auth::routes();
 
 Route::prefix('api')->middleware('auth')->group(function () {
     Route::apiResource('laboratories', 'LaboratoryController');
+    Route::apiResource('brands', 'BrandController');
 });
 
 Route::get('/{vue_capture?}', function () {

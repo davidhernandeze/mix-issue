@@ -6,7 +6,8 @@ import {
     faCapsules,
     faFlask,
     faCopyright,
-    faSpinner
+    faSpinner,
+    faRandom,
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faTimes)
@@ -15,5 +16,6 @@ library.add(faCapsules)
 library.add(faFlask)
 library.add(faCopyright)
 library.add(faSpinner)
+library.add(faRandom)
 
 export default library
