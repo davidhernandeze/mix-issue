@@ -25,6 +25,16 @@
                         </div>
                         <span class="flex-grow whitespace-no-wrap">Laboratorios</span>
                     </router-link>
+                     <router-link
+                        to="/marcas"
+                        tag="li"
+                        class="py-3 cursor-pointer hover:bg-gray-700 hover:text-white flex items-center w-64"
+                    >
+                        <div class="w-16 flex justify-center">
+                            <Icon icon="random"/>
+                        </div>
+                        <span class="flex-grow whitespace-no-wrap">Marcas</span>
+                    </router-link>
                 </ul>
             </div>
         </div>

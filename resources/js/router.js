@@ -1,5 +1,6 @@
 import Dashboard from "./views/Dashboard"
 import Laboratories from "./views/Laboratories"
+import Brands from "./views/Brands"
 import {createRouter, createWebHistory} from "vue-router"
 
 const routes = [
@@ -12,6 +13,11 @@ const routes = [
         path: "/laboratorios",
         name: "laboratorios.index",
         component: Laboratories,
+    },
+    {
+        path: "/marcas",
+        name: "brands.index",
+        component: Brands,
     }
 ]
 
