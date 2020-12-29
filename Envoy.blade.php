@@ -48,7 +48,7 @@
     echo "NPM run install"
     npm install --silent --no-progress > /dev/null
     echo "NPM run prod"
-    npm run prod --silent --no-progress > /dev/null
+    npm run production --silent --no-progress > /dev/null
 
     echo "Deleting node_modules folder"
     rm -rf node_modules
