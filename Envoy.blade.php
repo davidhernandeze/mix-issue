@@ -12,6 +12,7 @@
     clone_repository
     run_composer
     update_symlinks
+    npm_run_prod
 @endstory
 
 @task('clone_repository')
