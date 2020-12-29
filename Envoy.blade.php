@@ -1,7 +1,7 @@
 @servers(['production' => 'deployer@preview.coworg.com'])
 
 @setup
-    $repository = git@gitlab.com:cesar.chab/licit-action.git;
+    $repository = 'git@gitlab.com:cesar.chab/licit-action.git';
     $releases_dir = '/var/www/licit-action/releases';
     $app_dir = '/var/www/licit-action';
     $release = date('YmdHis');
