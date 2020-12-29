@@ -47,8 +47,8 @@
 
     cd {{ $new_release_dir }}
 
-    npm install > /dev/null
-    npm run dev > /dev/null
+    npm run install --silent --no-progress > /dev/null
+    npm run prod --silent --no-progress > /dev/null
 
     echo "Deleting node_modules folder"
     rm -rf node_modules
