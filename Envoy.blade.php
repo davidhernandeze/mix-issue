@@ -43,11 +43,11 @@
 @endtask
 
 @task('npm_run_prod')
-    echo "NPM run prod"
 
     cd {{ $new_release_dir }}
-
+    echo "NPM run install"
     npm run install --silent --no-progress > /dev/null
+    echo "NPM run prod"
     npm run prod --silent --no-progress > /dev/null
 
     echo "Deleting node_modules folder"
