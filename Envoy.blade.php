@@ -39,3 +39,15 @@
     echo 'Linking current release'
     ln -nfs {{ $new_release_dir }} {{ $app_dir }}/current
 @endtask
+
+@task('npm_run_prod')
+    echo "NPM run prod"
+
+    cd {{ $new_release_dir }}
+
+    npm install --silent --no-progress > /dev/null
+    npm run dev --silent --no-progress > /dev/null
+
+    echo "Deleting node_modules folder"
+    rm -rf node_modules
+@endtask
